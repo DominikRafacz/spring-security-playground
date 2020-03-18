@@ -2,3 +2,5 @@
 .idea/
 
 spring-security-playground.iml
+
+target/
