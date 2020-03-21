@@ -6,11 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Profile("server")
 @RestController
-public class MainController {
+public class ClientController {
 
-    @RequestMapping("/shelter")
-    public String secured(){
-        System.out.println("Someone came inside.");
-        return "You're safe here.";
+    @RequestMapping("/inside")
+    public String inside(){
+        return null;
     }
 }
