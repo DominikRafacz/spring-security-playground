@@ -21,7 +21,7 @@ import java.util.Collections;
 @RestController
 public class ClientController {
 
-    private static final String OUTER_URL = "https://127.0.0.1:8086/shelter";
+    private static final String OUTER_URL = "https://127.0.0.1:8086/user/shelter";
 
     @Value("${trust.store}")
     private Resource trustStore;
@@ -31,27 +31,18 @@ public class ClientController {
 
     @RequestMapping("/inside")
     public String inside() throws Exception {
-//        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-//                (hostname, sslSession) -> hostname.equals("localhost"));
         SSLContext sslContext = new SSLContextBuilder()
                 .loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray())
                 .build();
-        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
         CloseableHttpClient httpClient = HttpClients.custom()
-                .setSSLSocketFactory(socketFactory)
+                .setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext))
                 .build();
-        HttpComponentsClientHttpRequestFactory factory =
-                new HttpComponentsClientHttpRequestFactory(httpClient);
-//        String tmp = new RestTemplateBuilder()
-//                .requestFactory(() -> factory)
-//                .basicAuthentication("user1", "user1Pass").build()
-        RestTemplate restTemplate = new RestTemplate(factory);
+        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
         restTemplate
-                .getInterceptors().add(new BasicAuthenticationInterceptor("user1", "user1Pass"));
+                .getInterceptors().add(new BasicAuthenticationInterceptor("user", "userPass"));
         String tmp = restTemplate
                 .getForEntity(OUTER_URL, String.class, Collections.emptyMap())
                 .getBody();
-//        new RestTemplate(factory)
         System.out.println(tmp);
         return tmp;
     }

@@ -8,9 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
 
-    @RequestMapping("/shelter")
-    public String secured(){
+    @RequestMapping("/user/shelter")
+    public String secured_form(){
+        System.out.println("Someone came inside 'user'.");
+        return "You're safe by here.";
+    }
+
+    @RequestMapping("/guest/shelter")
+    public String unsecured(){
         System.out.println("Someone came inside.");
-        return "You're safe here.";
+        return "You're not safe at all here.";
     }
 }
