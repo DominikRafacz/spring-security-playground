@@ -1,0 +1,17 @@
+# on server:
+- create user with role ADMIN
+- create users with role LOCALSERVER
+- generate key-cert with:
+keytool -genkeypair -alias serverkey -keyalg RSA -dname "CN=MainServer" -keypass serverPassword -keystore server.jks -storepass serverPassword -ext "SAN:c=IP:192.168.1.100"
+- export certificate:
+keytool -exportcert -alias serverkey -file server-public.cer -keystore server.jks -storepass serverPassword
+- import each client certificate:
+keytool -importcert -keystore server.jks -alias ${CLIENTCERTALIAS} -file ${CLIENTCERTNAME}-public.cer -storepass serverPassword -noprompt
+
+# on each client:
+- generate key-cert with:
+keytool -genkeypair -alias ${CLIENTCERTALIAS} -keyalg RSA -keypass ${CLIENTCERTPASS} -keystore ${CLIENTCERTNAME}.jks -storepass ${CLIENTCERTPASS} -ext "SAN:c=DNS:localhost,IP:127.0.0.1"
+- export certificate:
+keytool -exportcert -alias ${CLIENTCERTALIAS} -file ${CLIENTCERTNAME}-public.cer -keystore ${CLIENTCERTNAME}.jks -storepass ${CLIENTCERTPASS}
+- import server certificate:
+keytool -importcert -keystore ${CLIENTCERTNAME}.jks -alias serverkey -file server-public.cer -storepass ${CLIENTCERTPASS} -noprompt

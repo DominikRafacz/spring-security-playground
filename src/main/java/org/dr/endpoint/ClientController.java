@@ -21,7 +21,7 @@ import java.util.Collections;
 @RestController
 public class ClientController {
 
-    private static final String OUTER_URL = "https://127.0.0.1:8086/user/shelter";
+    private static final String OUTER_URL = "https://192.168.1.100:8086/user/shelter";
 
     @Value("${trust.store}")
     private Resource trustStore;
